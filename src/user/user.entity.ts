@@ -1,11 +1,15 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, OneToMany } from 'typeorm';
 import { Exclude, Transform } from 'class-transformer';
 import { IsString, IsEmail, IsNotEmpty, IsDateString } from 'class-validator';
+import { Batch } from '../batch/batch.entity';
 
 @Entity('users')
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @OneToMany(() => Batch, (batch) => batch.createdByUser)
+  batches: Batch[];
 
   @Column()
   @IsString()

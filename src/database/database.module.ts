@@ -17,22 +17,21 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         
         return {
           type: 'mysql',
-          host: configService.get('DB_HOST', 'localhost'),
-          port: configService.get('DB_PORT', 3306),
-          username: configService.get('DB_USERNAME', 'root'),
-          password: configService.get('DB_PASSWORD', ''),
-          database: configService.get('DB_DATABASE', 'windsurf-training'),
-          entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-          migrations: [__dirname + '/migrations/*{.ts,.js}'],
-          migrationsRun: true,
-          synchronize: false,
-          // Logging configuration
-          logger: 'advanced-console',
-          logging: ['error', 'warn', 'info', 'log', 'migration', 'schema', 'query'],
-          maxQueryExecutionTime: 1000, // Log slow queries (>1s)
-          extra: {
-            connectionLimit: 10,
-          },
+        host: configService.get('DB_HOST'),
+        port: configService.get('DB_PORT'),
+        username: configService.get('DB_USER'),
+        password: configService.get('DB_PASSWORD'),
+        database: configService.get('DB_DATABASE'),
+       
+        synchronize:false,
+        logging: true,
+        migrationsRun: true,
+        cli: {
+          migrationsDir: 'migrations',
+        },
+        migrations: [__dirname + '/migrations/*{.ts,.js}'],
+        entities: [__dirname + '/../**/*.entity{.ts,.js}'],
+          
         };
       },
     }),

@@ -21,3 +21,4 @@ export class CreateUserDto {
   @IsNotEmpty()
   birthdate: Date;
 }
+
