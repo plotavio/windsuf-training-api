@@ -26,8 +26,6 @@ export class BatchService {
   async findAll(): Promise<Batch[]> {
     return this.batchRepository.find({
       relations: ['createdByUser'],
-      where: { deletedAt: IsNull() },
-      select: ['id', 'batchNumber', 'createdAt', 'createdByUserId', 'deletedAt']
     });
   }
 
@@ -35,7 +33,6 @@ export class BatchService {
     const batch = await this.batchRepository.createQueryBuilder('batch')
       .leftJoinAndSelect('batch.createdByUser', 'createdByUser')
       .where('batch.id = :id', { id })
-      .andWhere('batch.deletedAt IS NULL')
       .getOne();
 
     if (!batch) {
@@ -52,15 +49,13 @@ export class BatchService {
 
   async remove(id: number): Promise<void> {
     const batch = await this.findOne(id);
-    batch.deletedAt = new Date();
     await this.batchRepository.save(batch);
   }
 
   async findDeleted(): Promise<Batch[]> {
     return this.batchRepository.find({
       relations: ['createdByUser'],
-      where: { deletedAt: Not(IsNull()) },
-      select: ['id', 'batchNumber', 'createdAt', 'createdByUserId', 'deletedAt']
+      select: ['id', 'batchNumber', 'createdAt', 'createdByUserId', 'deleted_at']
     });
   }
 }

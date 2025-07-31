@@ -6,6 +6,7 @@ import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { BatchModule } from './batch/batch.module';
+import { BigbagModule } from './bigbag/bigbag.module';
 import { User } from './user/user.entity';
 
 @Module({
@@ -38,6 +39,7 @@ import { User } from './user/user.entity';
     }),
     UserModule,
     AuthModule,
+    BigbagModule,
     BatchModule,
   ],
   controllers: [AppController],

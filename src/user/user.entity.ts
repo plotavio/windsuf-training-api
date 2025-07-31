@@ -38,6 +38,10 @@ export class User {
   @Transform(({ value }) => new Date(value))
   birthdate: Date;
 
+  @Column({ nullable: true, name: 'refresh_token' })
+  @Exclude({ toPlainOnly: true })
+  refreshToken: string;
+
   @CreateDateColumn({ name: 'created_at' })
   @Transform(({ value }) => new Date(value))
   createdAt: Date;

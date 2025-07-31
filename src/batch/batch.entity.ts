@@ -19,5 +19,5 @@ export class Batch {
   createdByUser: User;
 
   @DeleteDateColumn()
-  deletedAt: Date;
+  deleted_at: Date;
 }

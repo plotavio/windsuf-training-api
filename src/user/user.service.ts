@@ -94,6 +94,18 @@ export class UserService {
     await this.userRepository.softDelete(id);
   }
 
+  async updateRefreshToken(userId: number, refreshToken: string): Promise<void> {
+    await this.userRepository.update(userId, { refreshToken });
+  }
+
+  async getRefreshToken(userId: number): Promise<string | null> {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+      select: ['refreshToken'],
+    });
+    return user?.refreshToken || null;
+  }
+
   async restore(id: number): Promise<UserResponse> {
     try {
       const result = await this.userRepository.restore(id);
