@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Param, UseGuards, Req, Patch, Delete } from '@nestjs/common';
 import { BigbagService } from './bigbag.service';
-import { CreateBigbagDto } from './dto/create-bigbag.dto';
+import { CreateBigbagDto, SingleBigbagDto } from './dto/create-bigbag.dto';
 import { UpdateBigbagDto } from './dto/update-bigbag.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
@@ -9,9 +9,15 @@ export class BigbagController {
   constructor(private readonly bigbagService: BigbagService) {}
 
   @UseGuards(JwtAuthGuard)
-  @Post()
-  create(@Body() createBigbagDto: CreateBigbagDto) {
+  @Post('bulk')
+  createBulk(@Body() createBigbagDto: CreateBigbagDto) {
     return this.bigbagService.create(createBigbagDto);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post()
+  create(@Body() createBigbagDto: SingleBigbagDto) {
+    return this.bigbagService.create({ bigbags: [createBigbagDto] });
   }
 
   @Get()
@@ -25,9 +31,15 @@ export class BigbagController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Patch('bulk')
+  updateBulk(@Body() updateBigbagDtos: {id: number, data: UpdateBigbagDto}[]) {
+    return this.bigbagService.update(updateBigbagDtos);
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateBigbagDto: UpdateBigbagDto) {
-    return this.bigbagService.update(+id, updateBigbagDto);
+    return this.bigbagService.update([{ id: +id, data: updateBigbagDto }]);
   }
 
   @UseGuards(JwtAuthGuard)

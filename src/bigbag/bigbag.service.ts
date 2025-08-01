@@ -12,9 +12,11 @@ export class BigbagService {
     private readonly bigbagRepository: Repository<Bigbag>,
   ) {}
 
-  async create(createBigbagDto: CreateBigbagDto): Promise<Bigbag> {
-    const bigbag = this.bigbagRepository.create(createBigbagDto);
-    return this.bigbagRepository.save(bigbag);
+  async create(createBigbagDto: CreateBigbagDto): Promise<Bigbag[]> {
+    const bigbags = createBigbagDto.bigbags.map(bigbagData => 
+      this.bigbagRepository.create(bigbagData)
+    );
+    return this.bigbagRepository.save(bigbags);
   }
 
   async findAll(): Promise<Bigbag[]> {
@@ -29,10 +31,15 @@ export class BigbagService {
     return bigbag;
   }
 
-  async update(id: number, updateBigbagDto: UpdateBigbagDto): Promise<Bigbag> {
-    const bigbag = await this.findOne(id); // First, check if the resource exists
-    await this.bigbagRepository.update(id, updateBigbagDto);
-    return this.findOne(id);
+  async update(updateBigbagDtos: {id: number, data: UpdateBigbagDto}[]): Promise<Bigbag[]> {
+    const updates = await Promise.all(
+      updateBigbagDtos.map(async ({id, data}) => {
+        const bigbag = await this.findOne(id);
+        Object.assign(bigbag, data);
+        return bigbag;
+      })
+    );
+    return this.bigbagRepository.save(updates);
   }
 
   async remove(id: number): Promise<void> {

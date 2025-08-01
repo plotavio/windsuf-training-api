@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, Put, H
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { BatchService } from './batch.service';
 import { CreateBatchDto } from './dto/create-batch.dto';
+import { UpdateBatchDto } from './dto/update-batch.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { Batch } from './batch.entity';
 
@@ -10,9 +11,10 @@ import { Batch } from './batch.entity';
 export class BatchController {
   constructor(private readonly batchService: BatchService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Post()
-  @ApiOperation({ summary: 'Create a new batch' })
-  @ApiResponse({ status: 201, description: 'The batch has been successfully created.', type: Batch })
+  @ApiOperation({ summary: 'Create a new batch with bigbags' })
+  @ApiResponse({ status: 201, description: 'The batch and its bigbags have been successfully created.', type: Batch })
   async create(@Body() createBatchDto: CreateBatchDto) {
     return this.batchService.create(createBatchDto);
   }
@@ -43,15 +45,16 @@ export class BatchController {
 
   @UseGuards(JwtAuthGuard)
   @Put(':id')
-  @ApiOperation({ summary: 'Update a batch' })
-  @ApiResponse({ status: 200, description: 'The batch has been successfully updated.', type: Batch })
+  @ApiOperation({ summary: 'Update a batch and its bigbags' })
+  @ApiResponse({ status: 200, description: 'The batch and its bigbags have been successfully updated.', type: Batch })
   async update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() createBatchDto: CreateBatchDto,
+    @Body() updateBatchDto: UpdateBatchDto,
   ) {
-    return this.batchService.update(id, createBatchDto);
+    return this.batchService.update(id, updateBatchDto);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a batch' })
   @ApiResponse({ status: 200, description: 'The batch has been successfully deleted.' })

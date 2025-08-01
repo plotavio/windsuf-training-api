@@ -1,6 +1,7 @@
-import { IsInt, IsBoolean, IsOptional, IsNotEmpty, IsNumber } from 'class-validator';
+import { IsInt, IsBoolean, IsOptional, IsNotEmpty, IsNumber, IsArray, ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
 
-export class CreateBigbagDto {
+export class SingleBigbagDto {
   @IsNotEmpty()
   @IsNumber()
   batchId: number;
@@ -32,4 +33,11 @@ export class CreateBigbagDto {
   @IsNotEmpty()
   @IsNumber()
   createdByUserId: number;
+}
+
+export class CreateBigbagDto {
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => SingleBigbagDto)
+  bigbags: SingleBigbagDto[];
 }

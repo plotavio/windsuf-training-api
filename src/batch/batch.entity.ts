@@ -1,5 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, ManyToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, ManyToOne, OneToMany } from 'typeorm';
 import { User } from '../user/user.entity';
+import { Bigbag } from '../bigbag/bigbag.entity';
 
 @Entity('batch')
 export class Batch {
@@ -20,4 +21,7 @@ export class Batch {
 
   @DeleteDateColumn()
   deleted_at: Date;
+
+  @OneToMany(() => Bigbag, (bigbag) => bigbag.batch)
+  bigbags: Bigbag[];
 }
